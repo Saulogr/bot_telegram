@@ -23,7 +23,7 @@ atual_update = max(atlz$update_id)
 
 if (ultimo_update == atual_update){
   
-  print("Não houve mudança")
+  # Nada a fazer
 } else {
   
   print("Houve mudança")
@@ -36,15 +36,26 @@ if (ultimo_update == atual_update){
   
   user.id = df_info %>% filter(id_update == ultimo_update +1) %>%
     select(user.id) %>% as.integer()
+  username = df_info %>% filter(id_update == ultimo_update +1) %>%
+    select(user.first_name) %>% as.character()
   
   if (mensagem == "Olá"){
     
-    img = readJPEG("CJNYCB45H4GE56DH5YB3AV7BX4.jpg" )
+    msg = paste("Olá, ", username  ,
+"Qual opção você deseja?
+  1. Número de ocorrências
+  2. Faturamento
+  3. Tempo médio de atendimento
+  4. DEC
+  5. FEC")
     
     bot$set_default_chat_id(user.id)
-    bot$sendPhoto("CJNYCB45H4GE56DH5YB3AV7BX4.jpg", caption = 'Aqui tem coragem')
+    bot$sendMessage(msg, parse_mode = 'markdown' )
+  } else {
+    bot$set_default_chat_id(user.id)
+    bot$sendMessage("Não entendi o que você quis falar. Digite Olá para ver as iformações")
+    
   }
-  
   
   # Salvando em um arquivo auxiliar
   write.csv(atual_update, "lastupdate.tlb" )
