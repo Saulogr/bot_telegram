@@ -43,12 +43,12 @@ if (atual_update == ultimo_update){
   if (mensagem == "Olá"){
     
     msg = paste("Olá, ", username  ,
-"Qual opção você deseja?
-  1. Número de ocorrências
-  2. Faturamento
-  3. Tempo médio de atendimento
-  4. DEC
-  5. FEC")
+"Digite o número da opção que deseja:
+  *1*. Número de ocorrências
+  *2*. Faturamento
+  *3*. Tempo médio de atendimento
+  *4*. DEC
+  *5*. FEC")
     
     bot$set_default_chat_id(chatid)
     bot$sendMessage(msg, parse_mode = 'markdown' )
@@ -78,7 +78,7 @@ if (atual_update == ultimo_update){
         primeira_resposta = TRUE}
     else if (mensagem_chat == '5'){bot$sendMessage("Você digitou 5", parse_mode = 'markdown')
         primeira_resposta = TRUE}
-    else if (LimitGet == 20){bot$sendMessage("Tempo de espera atingido. Digite Olá para reiniciá-lo", parse_mode = 'markdown')
+    else if (LimitGet == 20){bot$sendMessage("Tempo de espera atingido. Digite *Olá* para reiniciá-lo.", parse_mode = 'markdown')
       primeira_resposta = TRUE}
 
   }
@@ -87,7 +87,7 @@ if (atual_update == ultimo_update){
    
   } else {
     bot$set_default_chat_id(chatid)
-    bot$sendMessage("Procedimento finalizado. Digite Olá um novo atendimento")
+    bot$sendMessage("Procedimento finalizado. Digite *Olá* para um novo atendimento")
     
   }
   
