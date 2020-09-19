@@ -16,7 +16,7 @@ while (TRUE) {
 
 #Pegando os uptades
   ultimo_update =  read.csv("lastupdate.tlb")[1,2]
-atlz = bot$getUpdates()
+atlz = bot$getUpdates(ultimo_update -5)
 
 # Coletando o número do último update e realizando o teste para saber se houve mudanças
 ultimo_update =  read.csv("lastupdate.tlb")[1,2]
@@ -58,7 +58,7 @@ if (atual_update == ultimo_update){
   LimitGet = 0
   while (primeira_resposta == FALSE && LimitGet <= 20) {
     
-    atualiza_chat = bot$getUpdates()
+    atualiza_chat = bot$getUpdates(ultimo_update -5)
     LimitGet = LimitGet + 1
     df_info_chat = data.frame(id_update = atualiza_chat$update_id, user = atualiza_chat[[2]][3][,1], atualiza_chat[[2]][4], atualiza_chat[[2]][5] )[, c(-4)]
     mensagem_chat = df_info_chat %>% filter(id_update == max(df_info_chat$id_update), user.id == chatid) %>%
@@ -78,7 +78,7 @@ if (atual_update == ultimo_update){
         primeira_resposta = TRUE}
     else if (mensagem_chat == '5'){bot$sendMessage("Você digitou 5", parse_mode = 'markdown')
         primeira_resposta = TRUE}
-    else if (LimitGet == 30){bot$sendMessage("Atendimento finalizado. Digite Olá para reiniciá-lo", parse_mode = 'markdown')
+    else if (LimitGet == 20){bot$sendMessage("Tempo de espera atingido. Digite Olá para reiniciá-lo", parse_mode = 'markdown')
       primeira_resposta = TRUE}
 
   }
