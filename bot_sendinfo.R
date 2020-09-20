@@ -31,7 +31,8 @@ while (TRUE) {
     # Nada a fazer
   } else {
     
-        # Chave de aprovação
+    
+    # Chave de aprovação
     # Salvando as informações necessárias no data frame
     df_info = data.frame(id_update = atlz$update_id, user = atlz[[2]][3][,1], atlz[[2]][4], text = atlz$message$text)[, c(-4)]
     df_info = df_info %>% mutate(text = as.character(text))
@@ -46,6 +47,11 @@ while (TRUE) {
       select(user.first_name) %>% as.character()
     print(paste(username, " fez uma solicitação"))
     
+    #Coletando a lsita do usuários cadastrados
+    list_user = read.xlsx("credenciais.xlsx")
+    user_ids = list_user$user_id
+    
+    if (chatid %in% user_ids){ #inicio proteção senha
     if (mensagem == "Olá" || mensagem == "/start"){
       
       msg = paste("Olá, ", username  ,
@@ -125,7 +131,14 @@ while (TRUE) {
     
     # Salvando em um arquivo auxiliar
     write.csv(atual_update, "lastupdate.tlb" )
-  }
+    }else {
+      # Se não estiver cadastrado na lista
+      bot$set_default_chat_id(chatid)
+      bot$sendMessage('Usuário não cadastrado. *Entre e contato para solicitar acesso*.', parse_mode = 'markdown' )
+      write.csv(atual_update, "lastupdate.tlb" )
+      
+      
+  }}
   
 }
 
