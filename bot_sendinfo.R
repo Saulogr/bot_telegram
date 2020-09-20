@@ -3,7 +3,10 @@ library(tidyverse)
 library(telegram)
 library(lubridate)
 library(jpeg)
+library(RODBC)
 
+# Conectando ao banco de dados
+con = odbcConnect("conexaoraclerstudio", uid = "hr", pwd =  "hr")
 # Configrando o BOT
 bot = TGBot$new(token = '1373216588:AAESixBPt6Pz1duaWgztF3lKgL2BCkS0l_c' )
 
@@ -40,12 +43,12 @@ if (atual_update == ultimo_update){
   username = df_info %>% filter(id_update == ultimo_update +1) %>%
     select(user.first_name) %>% as.character()
   
-  if (mensagem == "Olá"){
+  if (mensagem == "Olá" || mensagem == "/start"){
     
     msg = paste("Olá, ", username  ,
 "Digite o número da opção que deseja:
-  *1*. Número de ocorrências
-  *2*. Faturamento
+  *1*. Número de funcionários ativos
+  *2*. Salário médio
   *3*. Tempo médio de atendimento
   *4*. DEC
   *5*. FEC")
@@ -65,15 +68,27 @@ if (atual_update == ultimo_update){
       select(text) %>% as.character()
     
     if (mensagem_chat == '1')
-      {bot$sendMessage("Você digitou 1", parse_mode = 'markdown' ) 
-        primeira_resposta = TRUE 
+      { 
+      nr_funcionarios = sqlQuery(con, "SELECT count(emp.employee_id ) total_funcionarios FROM hr.employees emp")
+      nr_funcionarios = as.character(nr_funcionarios[1,1])
+      bot$sendMessage(paste("O número de funcionários ativos é de : ","*", nr_funcionarios, "*"), parse_mode = 'markdown')
+      primeira_resposta = TRUE 
     }
     else if (mensagem_chat == '2')
-      {bot$sendMessage("Você digitou 2", parse_mode = 'markdown' )
-        primeira_resposta = TRUE}
+    {
+      media_salarial = sqlQuery(con, "SELECT 'R$ ' || round(avg(emp.salary), 2) media FROM hr.employees emp")
+      media_salarial = as.character(media_salarial[1,1])
+      bot$sendMessage(paste("A Média salarial dos funcionários é de : ","*", media_salarial, "*"), parse_mode = 'markdown')
+      primeira_resposta = TRUE 
+      
+    }
     else if (mensagem_chat == '3')
-      {bot$sendMessage("Você digitou 3", parse_mode = 'markdown' )
-        primeira_resposta = TRUE}
+      {
+      cargos = sqlQuery(con, "select JOB_TITLE, MIN_SALARY, MAX_SALARY from jobs")
+      #cargos = as.character(cargos[1,1])
+      bot$sendMessage(cargos, parse_mode = 'markdown')
+      primeira_resposta = TRUE
+        }
     else if (mensagem_chat == '4'){bot$sendMessage("Você digitou 4", parse_mode = 'markdown' )
         primeira_resposta = TRUE}
     else if (mensagem_chat == '5'){bot$sendMessage("Você digitou 5", parse_mode = 'markdown')
