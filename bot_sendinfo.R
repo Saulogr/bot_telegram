@@ -99,7 +99,7 @@ while (TRUE) {
                  subtitle = "Tamando como base o último ano")+
             theme(axis.text.x = element_blank(),
                   panel.grid = element_blank() )+
-            geom_label(label = dados$SALARIO_MEDIO )+
+            geom_label(label = salario_medio$SALARIO_MEDIO )+
             coord_flip()
           ggsave("salario_medio.png", grafico, device =  "png", width = 15, height = 20, units = "cm")
                     bot$sendPhoto("salario_medio.png", caption = "Salário médio por cargo (R$)" )
