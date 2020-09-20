@@ -35,8 +35,9 @@ while (TRUE) {
     # Salvando as informações necessárias no data frame
     df_info = data.frame(id_update = atlz$update_id, user = atlz[[2]][3][,1], atlz[[2]][4], atlz[[2]][5] )[, c(-4)]
     df_info$date = as_datetime(df_info$date, tz = "America/Maceio")
+    df_info$text = coalesce(df_info$text,"Olá" )
     mensagem = df_info %>% filter(id_update == ultimo_update +1) %>%
-      select(text) %>% as.character()
+      select(text)  %>% as.character() 
     
     chatid = df_info %>% filter(id_update == ultimo_update +1) %>%
       select(user.id) %>% as.integer()
@@ -59,7 +60,7 @@ while (TRUE) {
       # Primera mensagem
       primeira_resposta = FALSE
       LimitGet = 0
-      while (primeira_resposta == FALSE && LimitGet <= 20) {
+      while (primeira_resposta == FALSE && LimitGet <= 50) {
         
         atualiza_chat = bot$getUpdates(ultimo_update -5)
         LimitGet = LimitGet + 1
@@ -106,7 +107,7 @@ while (TRUE) {
           unlink("salario_medio.png")
           primeira_resposta = TRUE
         }
-        else if (LimitGet == 20){bot$sendMessage("Tempo de espera atingido. Digite *Olá* para reiniciá-lo.", parse_mode = 'markdown')
+        else if (LimitGet == 50){bot$sendMessage("Tempo de espera atingido. Digite *Olá* para reiniciá-lo.", parse_mode = 'markdown')
           primeira_resposta = TRUE}
         
       }
