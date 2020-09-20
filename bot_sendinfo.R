@@ -31,8 +31,7 @@ while (TRUE) {
     # Nada a fazer
   } else {
     
-    print("Houve mudança")
-    # Chave de aprovação
+        # Chave de aprovação
     # Salvando as informações necessárias no data frame
     df_info = data.frame(id_update = atlz$update_id, user = atlz[[2]][3][,1], atlz[[2]][4], atlz[[2]][5] )[, c(-4)]
     df_info$date = as_datetime(df_info$date, tz = "America/Maceio")
@@ -43,6 +42,7 @@ while (TRUE) {
       select(user.id) %>% as.integer()
     username = df_info %>% filter(id_update == ultimo_update +1) %>%
       select(user.first_name) %>% as.character()
+    print(paste(username, " fez uma solicitação"))
     
     if (mensagem == "Olá" || mensagem == "/start"){
       
@@ -102,7 +102,8 @@ while (TRUE) {
             geom_label(label = dados$SALARIO_MEDIO )+
             coord_flip()
           ggsave("salario_medio.png", grafico, device =  "png", width = 15, height = 20, units = "cm")
-          bot$sendPhoto("salario_medio.png", caption = "Salário médio por cargo (R$)" )
+                    bot$sendPhoto("salario_medio.png", caption = "Salário médio por cargo (R$)" )
+          unlink("salario_medio.png")
           primeira_resposta = TRUE
         }
         else if (LimitGet == 20){bot$sendMessage("Tempo de espera atingido. Digite *Olá* para reiniciá-lo.", parse_mode = 'markdown')
