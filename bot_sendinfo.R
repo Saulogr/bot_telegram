@@ -33,7 +33,8 @@ while (TRUE) {
     
         # Chave de aprovação
     # Salvando as informações necessárias no data frame
-    df_info = data.frame(id_update = atlz$update_id, user = atlz[[2]][3][,1], atlz[[2]][4], atlz[[2]][5] )[, c(-4)]
+    df_info = data.frame(id_update = atlz$update_id, user = atlz[[2]][3][,1], atlz[[2]][4], text = atlz$message$text)[, c(-4)]
+    df_info = df_info %>% mutate(text = as.character(text))
     df_info$date = as_datetime(df_info$date, tz = "America/Maceio")
     df_info$text = coalesce(df_info$text,"Olá" )
     mensagem = df_info %>% filter(id_update == ultimo_update +1) %>%
@@ -64,7 +65,9 @@ while (TRUE) {
         
         atualiza_chat = bot$getUpdates(ultimo_update -5)
         LimitGet = LimitGet + 1
-        df_info_chat = data.frame(id_update = atualiza_chat$update_id, user = atualiza_chat[[2]][3][,1], atualiza_chat[[2]][4], atualiza_chat[[2]][5] )[, c(-4)]
+        df_info_chat = data.frame(id_update = atualiza_chat$update_id, user = atualiza_chat[[2]][3][,1], atualiza_chat[[2]][4], text = atualiza_chat$message$text  )[, c(-4)]
+        df_info_chat = df_info_chat %>% mutate(text = as.character(text))
+        df_info_chat$text = coalesce(df_info_chat$text,"Olá" )
         mensagem_chat = df_info_chat %>% filter(id_update == max(df_info_chat$id_update), user.id == chatid) %>%
           select(text) %>% as.character()
         
